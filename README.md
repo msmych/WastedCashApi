@@ -1,0 +1,1 @@
+# Wasted cash API
