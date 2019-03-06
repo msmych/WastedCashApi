@@ -11,7 +11,7 @@ import wasted.mongo.MongoSequenceService
 class ExpenseController(val expenseRepository: ExpenseRepository,
                         val mongoSequenceService: MongoSequenceService) {
 
-    @PostMapping("/")
+    @PostMapping("")
     fun insertExpense() {
         expenseRepository.save(Expense(mongoSequenceService.next(Expense.SEQUENCE), 2, 3, 1000, "EUR", GROCERIES))
     }
