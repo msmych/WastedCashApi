@@ -1,9 +1,10 @@
 package wasted.expense
 
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import wasted.expense.Expense.Category.GROCERIES
+import wasted.expense.Expense.Category
 import wasted.mongo.MongoSequenceService
 
 @RestController
@@ -12,7 +13,19 @@ class ExpenseController(val expenseRepository: ExpenseRepository,
                         val mongoSequenceService: MongoSequenceService) {
 
     @PostMapping("")
-    fun insertExpense() {
-        expenseRepository.save(Expense(mongoSequenceService.next(Expense.SEQUENCE), 2, 3, 1000, "EUR", GROCERIES))
+    fun insertExpense(@RequestBody request: PostExpenseRequest) {
+        expenseRepository.save(Expense(
+                mongoSequenceService.next(Expense.SEQUENCE),
+                request.userId,
+                request.groupId,
+                request.amount,
+                request.currency,
+                request.category))
     }
+
+    data class PostExpenseRequest(val userId: Long,
+                                  val groupId: Long,
+                                  val amount: Long,
+                                  val currency: String,
+                                  val category: Category)
 }
