@@ -1,9 +1,10 @@
-HELP.md
 .gradle
 gradle/
 gradlew
 gradlew.bat
 /build/
+
+files/
 
 ### STS ###
 .apt_generated

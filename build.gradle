@@ -45,3 +45,7 @@ compileTestKotlin {
 test {
     useJUnitPlatform()
 }
+
+jar {
+    enabled = true
+}
