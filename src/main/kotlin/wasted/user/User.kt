@@ -5,7 +5,7 @@ import org.springframework.data.mongodb.core.mapping.Document
 
 @Document
 data class User(@Id val id: Int,
-                val currencies: Set<String>) {
+                val currencies: MutableSet<String>) {
 
     companion object {
         @Transient
