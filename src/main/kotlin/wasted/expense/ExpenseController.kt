@@ -23,7 +23,7 @@ class ExpenseController(val expenseRepository: ExpenseRepository,
                 request.category))
     }
 
-    data class PostExpenseRequest(val userId: Long,
+    data class PostExpenseRequest(val userId: Int,
                                   val groupId: Long,
                                   val amount: Long,
                                   val currency: String,
