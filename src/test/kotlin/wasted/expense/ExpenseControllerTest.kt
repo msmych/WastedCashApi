@@ -1,11 +1,10 @@
 package wasted.expense
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.verify
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.ArgumentMatchers.anyString
-import org.mockito.ArgumentMatchers.isA
-import org.mockito.Mockito.verify
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
@@ -37,7 +36,7 @@ internal class ExpenseControllerTest {
                 .content(objectMapper.writeValueAsString(
                         PostExpenseRequest(1, 2, 1000, "USD", GROCERIES))))
                 .andExpect(status().isOk)
-        verify(mongoSequenceService).next(anyString())
-        verify(expenseRepository).save(isA(Expense::class.java))
+        verify(mongoSequenceService).next(any())
+        verify(expenseRepository).save(any<Expense>())
     }
 }

@@ -7,7 +7,7 @@ import java.util.*
 
 @Document
 data class Expense(@Id val id: Long,
-                   val userId: Long,
+                   val userId: Int,
                    val groupId: Long,
                    val amount: Long,
                    val currency: String,
@@ -16,7 +16,7 @@ data class Expense(@Id val id: Long,
 
     companion object {
         @Transient
-        const val SEQUENCE: String = "expense_sequence"
+        const val SEQUENCE = "expense_sequence"
     }
 
     enum class Category {
