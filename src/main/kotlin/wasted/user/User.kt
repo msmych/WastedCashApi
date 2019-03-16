@@ -5,10 +5,4 @@ import org.springframework.data.mongodb.core.mapping.Document
 
 @Document
 data class User(@Id val id: Int,
-                val currencies: MutableSet<String>) {
-
-    companion object {
-        @Transient
-        const val SEQUENSE = "user_sequence"
-    }
-}
+                val currencies: MutableList<String>)

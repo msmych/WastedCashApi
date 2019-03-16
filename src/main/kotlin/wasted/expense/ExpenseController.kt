@@ -18,6 +18,7 @@ class ExpenseController(val expenseRepository: ExpenseRepository,
                 mongoSequenceService.next(Expense.SEQUENCE),
                 request.userId,
                 request.groupId,
+                request.telegramMessageId,
                 request.amount,
                 request.currency,
                 request.category))
@@ -25,6 +26,7 @@ class ExpenseController(val expenseRepository: ExpenseRepository,
 
     data class PostExpenseRequest(val userId: Int,
                                   val groupId: Long,
+                                  val telegramMessageId: Int?,
                                   val amount: Long,
                                   val currency: String,
                                   val category: Category)

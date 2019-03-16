@@ -1,5 +1,7 @@
 package wasted.user
 
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -29,7 +31,15 @@ internal class UserControllerTest {
     @BeforeEach
     fun setUp() {
         whenever(userRepository.findById(1))
-                .thenReturn(Optional.of(User(1, mutableSetOf("USD", "EUR"))))
+                .thenReturn(Optional.of(User(1, mutableListOf("USD", "EUR"))))
+    }
+
+    @Test
+    fun savingUser() {
+        whenever(userRepository.findById(any())).thenReturn(Optional.empty())
+        mvc.perform(post("/user/1"))
+                .andExpect(status().isOk)
+        verify(userRepository).save(any<User>())
     }
 
     @Test

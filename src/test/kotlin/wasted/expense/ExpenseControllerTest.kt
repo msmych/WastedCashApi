@@ -34,7 +34,7 @@ internal class ExpenseControllerTest {
         mvc.perform(post("/expense")
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(
-                        PostExpenseRequest(1, 2, 1000, "USD", GROCERIES))))
+                        PostExpenseRequest(1, 2, 3, 1000, "USD", GROCERIES))))
                 .andExpect(status().isOk)
         verify(mongoSequenceService).next(any())
         verify(expenseRepository).save(any<Expense>())
