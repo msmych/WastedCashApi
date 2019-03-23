@@ -30,6 +30,8 @@ class UserController(val userRepository: UserRepository) {
         val user = userRepository.findById(id)
                 .orElseThrow { NoSuchUserException(id) }
         val currencyUpperCase = currency.toUpperCase()
+        if (user.currencies.size == 1 && user.currencies[0] == currencyUpperCase)
+            return user.currencies
         if (user.currencies.contains(currencyUpperCase))
             user.currencies.remove(currencyUpperCase)
         else
