@@ -5,4 +5,4 @@ import org.springframework.data.mongodb.core.mapping.Document
 
 @Document
 data class User(@Id val id: Int,
-                val currencies: MutableList<String>)
+                val currencies: ArrayList<String>)
