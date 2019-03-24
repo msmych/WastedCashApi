@@ -1,9 +1,6 @@
 package wasted.expense
 
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import wasted.expense.Expense.Category
 import wasted.expense.Expense.Category.*
 import wasted.mongo.MongoSequenceService
@@ -33,4 +30,9 @@ class ExpenseController(val expenseRepository: ExpenseRepository,
     data class PostExpenseRequest(val userId: Int,
                                   val groupId: Long,
                                   val telegramMessageId: Int?)
+
+    @PutMapping("")
+    fun updateExpense(@RequestBody expense: Expense) {
+        expenseRepository.save(expense)
+    }
 }
