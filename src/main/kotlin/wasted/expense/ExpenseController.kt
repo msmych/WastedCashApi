@@ -13,6 +13,13 @@ class ExpenseController(val expenseRepository: ExpenseRepository,
                         val mongoSequenceService: MongoSequenceService,
                         val userRepository: UserRepository) {
 
+    @GetMapping("")
+    fun getExpenseByGroupIdAndTelegramMessageId(@RequestParam groupId: Long,
+                                                @RequestParam telegramMessageId: Int): Expense {
+        return expenseRepository.findByGroupIdAndTelegramMessageId(groupId, telegramMessageId)
+                ?: throw NoSuchExpenseException()
+    }
+
     @PostMapping("")
     fun createExpense(@RequestBody request: PostExpenseRequest): Expense {
         val user = userRepository.findById(request.userId)
