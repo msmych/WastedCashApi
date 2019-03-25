@@ -42,4 +42,10 @@ class ExpenseController(val expenseRepository: ExpenseRepository,
     fun updateExpense(@RequestBody expense: Expense) {
         expenseRepository.save(expense)
     }
+
+    @DeleteMapping("")
+    fun removeExpenseByGroupIdAndTelegramMessageId(@RequestParam groupId: Long,
+                                                   @RequestParam telegramMessageId: Int) {
+        expenseRepository.deleteByGroupIdAndTelegramMessageId(groupId, telegramMessageId)
+    }
 }
