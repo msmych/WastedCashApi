@@ -14,8 +14,7 @@ import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.util.*
 
@@ -31,7 +30,7 @@ internal class UserControllerTest {
     @BeforeEach
     fun setUp() {
         whenever(userRepository.findById(1))
-                .thenReturn(Optional.of(User(1, mutableListOf("USD", "EUR"))))
+                .thenReturn(Optional.of(User(1, arrayListOf("USD", "EUR"))))
     }
 
     @Test
@@ -55,7 +54,7 @@ internal class UserControllerTest {
     @Test
     fun addingUserCurrency() {
         JSONAssert.assertEquals("[USD, EUR, RUB]",
-                mvc.perform(post("/user/1/currency/rub")
+                mvc.perform(patch("/user/1/currency/rub")
                         .contentType(APPLICATION_JSON))
                         .andExpect(status().isOk)
                         .andReturn().response.contentAsString,
