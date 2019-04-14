@@ -1,8 +1,7 @@
 package wasted.expense
 
 import org.springframework.web.bind.annotation.*
-import wasted.expense.Expense.Category
-import wasted.expense.Expense.Category.*
+import wasted.expense.Expense.Category.OTHER
 import wasted.mongo.MongoSequenceService
 import wasted.user.User
 import wasted.user.UserRepository
@@ -29,14 +28,15 @@ class ExpenseController(val expenseRepository: ExpenseRepository,
                 request.userId,
                 request.groupId,
                 request.telegramMessageId,
-                0,
+                request.amount,
                 user.currencies[0],
                 OTHER))
     }
 
     data class PostExpenseRequest(val userId: Int,
                                   val groupId: Long,
-                                  val telegramMessageId: Int?)
+                                  val telegramMessageId: Int?,
+                                  val amount: Long = 0)
 
     @PutMapping("")
     fun updateExpense(@RequestBody expense: Expense) {
