@@ -26,7 +26,7 @@ class UserController(val userRepository: UserRepository) {
     }
 
     @PatchMapping("{id}/currency/{currency}")
-    fun addUserCurrency(@PathVariable id: Int, @PathVariable currency: String): List<String> {
+    fun toggleCurrency(@PathVariable id: Int, @PathVariable currency: String): List<String> {
         val user = userRepository.findById(id)
                 .orElseThrow { NoSuchUserException(id) }
         val currencyUpperCase = currency.toUpperCase()
@@ -36,6 +36,7 @@ class UserController(val userRepository: UserRepository) {
             user.currencies.remove(currencyUpperCase)
         else
             user.currencies.add(currencyUpperCase)
+        userRepository.save(user)
         return user.currencies
     }
 }
