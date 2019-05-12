@@ -1,5 +1,6 @@
 package wasted.expense
 
+import org.slf4j.LoggerFactory
 import org.springframework.web.bind.annotation.*
 import wasted.expense.Expense.Category.OTHER
 import wasted.mongo.MongoSequenceService
@@ -12,6 +13,8 @@ class ExpenseController(val expenseRepository: ExpenseRepository,
                         val mongoSequenceService: MongoSequenceService,
                         val userRepository: UserRepository) {
 
+    private val log = LoggerFactory.getLogger(ExpenseController::class.java)
+
     @GetMapping("")
     fun getExpenseByGroupIdAndTelegramMessageId(@RequestParam groupId: Long,
                                                 @RequestParam telegramMessageId: Int): Expense {
@@ -21,6 +24,7 @@ class ExpenseController(val expenseRepository: ExpenseRepository,
 
     @PostMapping("")
     fun createExpense(@RequestBody request: PostExpenseRequest): Expense {
+        log.info("Creating expense {}", request)
         val user = userRepository.findById(request.userId)
                 .orElse(userRepository.save(User(request.userId, arrayListOf("USD", "EUR", "RUB"))))
         return expenseRepository.save(Expense(
@@ -40,6 +44,7 @@ class ExpenseController(val expenseRepository: ExpenseRepository,
 
     @PutMapping("")
     fun updateExpense(@RequestBody expense: Expense) {
+        log.info("Updating expense {}", expense)
         expenseRepository.save(expense)
     }
 
