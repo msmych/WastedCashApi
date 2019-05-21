@@ -6,6 +6,7 @@ import wasted.expense.Expense.Category.OTHER
 import wasted.mongo.MongoSequenceService
 import wasted.user.User
 import wasted.user.UserRepository
+import java.lang.IllegalArgumentException
 
 @RestController
 @RequestMapping("expense")
@@ -43,10 +44,25 @@ class ExpenseController(val expenseRepository: ExpenseRepository,
                                   val amount: Long = 0)
 
     @PutMapping("")
-    fun updateExpense(@RequestBody expense: Expense) {
-        log.info("Updating expense {}", expense)
-        expenseRepository.save(expense)
+    fun updateExpense(@RequestBody request: PutExpenseRequest) {
+        log.info("Updating expense {}", request)
+        val expense = expenseRepository.findById(request.id)
+                .orElseThrow { NoSuchExpenseException() }
+        expenseRepository.save(Expense(
+                expense.id,
+                expense.userId,
+                expense.groupId,
+                expense.telegramMessageId,
+                request.amount,
+                request.currency,
+                request.category,
+                expense.date))
     }
+
+    data class PutExpenseRequest(val id: Long,
+                                 val amount: Long,
+                                 val currency: String,
+                                 val category: Expense.Category)
 
     @DeleteMapping("")
     fun removeExpenseByGroupIdAndTelegramMessageId(@RequestParam groupId: Long,
