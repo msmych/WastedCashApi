@@ -3,10 +3,10 @@ package wasted.expense
 import org.slf4j.LoggerFactory
 import org.springframework.web.bind.annotation.*
 import wasted.expense.Expense.Category.OTHER
+import wasted.expense.ExpenseController.ExpenseRemovalType.ALL
 import wasted.mongo.MongoSequenceService
 import wasted.user.User
 import wasted.user.UserRepository
-import java.lang.IllegalArgumentException
 
 @RestController
 @RequestMapping("expense")
@@ -16,14 +16,19 @@ class ExpenseController(val expenseRepository: ExpenseRepository,
 
     private val log = LoggerFactory.getLogger(ExpenseController::class.java)
 
-    @GetMapping("")
+    @GetMapping("{id}")
+    fun getExpenseById(@PathVariable id: Long): Expense? {
+        return expenseRepository.findById(id).orElse(null)
+    }
+
+    @GetMapping
     fun getExpenseByGroupIdAndTelegramMessageId(@RequestParam groupId: Long,
                                                 @RequestParam telegramMessageId: Int): Expense {
         return expenseRepository.findByGroupIdAndTelegramMessageId(groupId, telegramMessageId)
                 ?: throw NoSuchExpenseException()
     }
 
-    @PostMapping("")
+    @PostMapping
     fun createExpense(@RequestBody request: PostExpenseRequest): Expense {
         log.info("Creating expense {}", request)
         val user = userRepository.findById(request.userId)
@@ -43,7 +48,7 @@ class ExpenseController(val expenseRepository: ExpenseRepository,
                                   val telegramMessageId: Int?,
                                   val amount: Long = 0)
 
-    @PutMapping("")
+    @PutMapping
     fun updateExpense(@RequestBody request: PutExpenseRequest) {
         log.info("Updating expense {}", request)
         val expense = expenseRepository.findById(request.id)
@@ -64,9 +69,25 @@ class ExpenseController(val expenseRepository: ExpenseRepository,
                                  val currency: String,
                                  val category: Expense.Category)
 
-    @DeleteMapping("")
+    @DeleteMapping("{id}")
+    fun removeById(@PathVariable id: Long) {
+        expenseRepository.deleteById(id)
+    }
+
+    @DeleteMapping
     fun removeExpenseByGroupIdAndTelegramMessageId(@RequestParam groupId: Long,
                                                    @RequestParam telegramMessageId: Int) {
         expenseRepository.deleteByGroupIdAndTelegramMessageId(groupId, telegramMessageId)
+    }
+
+    @DeleteMapping("by/{type}")
+    fun removeByType(@PathVariable type: ExpenseRemovalType) {
+        when (type) {
+            ALL -> expenseRepository.deleteAll()
+        }
+    }
+
+    enum class ExpenseRemovalType {
+        ALL
     }
 }
