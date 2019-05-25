@@ -6,4 +6,5 @@ interface ExpenseRepository : MongoRepository<Expense, Long> {
 
     fun findByGroupIdAndTelegramMessageId(groupId: Long, telegramMessageId: Int): Expense?
     fun deleteByGroupIdAndTelegramMessageId(groupId: Long, telegramMessageId: Int)
+    fun deleteAllByGroupId(groupId: Long)
 }

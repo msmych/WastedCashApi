@@ -80,10 +80,10 @@ class ExpenseController(val expenseRepository: ExpenseRepository,
         expenseRepository.deleteByGroupIdAndTelegramMessageId(groupId, telegramMessageId)
     }
 
-    @DeleteMapping("by/{type}")
-    fun removeByType(@PathVariable type: ExpenseRemovalType) {
+    @DeleteMapping("/in/{groupId}/type/{type}")
+    fun removeByType(@PathVariable groupId: Long, @PathVariable type: ExpenseRemovalType) {
         when (type) {
-            ALL -> expenseRepository.deleteAll()
+            ALL -> expenseRepository.deleteAllByGroupId(groupId)
         }
     }
 
