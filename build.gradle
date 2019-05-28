@@ -22,6 +22,7 @@ dependencies {
             'com.fasterxml.jackson.module:jackson-module-kotlin',
             'org.jetbrains.kotlin:kotlin-reflect',
             'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
+    runtimeOnly 'org.codehaus.groovy:groovy:2.5.7'
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude module: 'junit'
     }

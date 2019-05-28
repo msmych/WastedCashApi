@@ -6,6 +6,10 @@ gradlew.bat
 
 files/
 
+logs/
+
+src/main/resources/application-prod.yml
+
 ### STS ###
 .apt_generated
 .classpath
