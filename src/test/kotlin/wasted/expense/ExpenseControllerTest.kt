@@ -9,9 +9,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.skyscreamer.jsonassert.Customization
 import org.skyscreamer.jsonassert.JSONAssert
-import org.skyscreamer.jsonassert.JSONCompareMode
-import org.skyscreamer.jsonassert.JSONCompareMode.*
-import org.skyscreamer.jsonassert.ValueMatcher
+import org.skyscreamer.jsonassert.JSONCompareMode.LENIENT
 import org.skyscreamer.jsonassert.comparator.CustomComparator
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -21,10 +19,10 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import wasted.expense.Expense.Category.GROCERIES
 import wasted.expense.Expense.Category.OTHER
 import wasted.expense.ExpenseController.PostExpenseRequest
 import wasted.mongo.MongoSequenceService
+import wasted.token.TokenInterceptor
 import wasted.user.User
 import wasted.user.UserRepository
 import java.util.*
@@ -43,9 +41,12 @@ internal class ExpenseControllerTest {
     lateinit var mongoSequenceService: MongoSequenceService
     @MockBean
     lateinit var userRepository: UserRepository
+    @MockBean
+    lateinit var tokenInterceptor: TokenInterceptor
 
     @BeforeEach
     fun setUp() {
+        whenever(tokenInterceptor.preHandle(any(), any(), any())).thenReturn(true)
         whenever(userRepository.findById(any())).thenReturn(Optional.of(User(1, arrayListOf("USD"))))
     }
 
