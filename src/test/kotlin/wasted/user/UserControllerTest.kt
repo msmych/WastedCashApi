@@ -16,6 +16,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import wasted.token.TokenInterceptor
 import java.util.*
 
 @ExtendWith(SpringExtension::class)
@@ -26,9 +27,12 @@ internal class UserControllerTest {
     lateinit var mvc: MockMvc
     @MockBean
     lateinit var userRepository: UserRepository
+    @MockBean
+    lateinit var tokenInterceptor: TokenInterceptor
 
     @BeforeEach
     fun setUp() {
+        whenever(tokenInterceptor.preHandle(any(), any(), any())).thenReturn(true)
         whenever(userRepository.findById(1))
                 .thenReturn(Optional.of(User(1, arrayListOf("USD", "EUR"))))
     }
