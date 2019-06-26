@@ -16,18 +16,18 @@ class LoadExpensesController(val objectMapper: ObjectMapper,
 
     @PostMapping("json")
     fun loadJson(@RequestParam file: MultipartFile) {
-        val expenses = objectMapper.readValue(file.bytes, Expenses::class.java)
-                .expenses.forEach { expenseRepository.save(
-                Expense(mongoSequenceService.next("expense"),
-                        it.userId,
-                        it.groupId,
-                        null,
-                        it.amount,
-                        it.currency,
-                        it.category,
-                        it.date))
-        }
-
+        objectMapper.readValue(file.bytes, Expenses::class.java)
+                .expenses
+                .forEach { expenseRepository.save(
+                        Expense(mongoSequenceService.next("expense"),
+                                it.userId,
+                                it.groupId,
+                                null,
+                                it.amount,
+                                it.currency,
+                                it.category,
+                                it.date))
+                }
     }
 
     data class Expenses(val expenses: Set<Expense>)
