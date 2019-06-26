@@ -1,11 +1,10 @@
 package wasted.total
 
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
-import wasted.expense.Expense.Category
+import org.springframework.web.bind.annotation.*
 import wasted.expense.ExpenseRepository
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.util.*
 
 @RestController
 @RequestMapping("total")
@@ -17,8 +16,17 @@ class TotalController(val expenseRepository: ExpenseRepository) {
                 .map { Total(it.userId, it.amount, it.currency, it.category) }
     }
 
-    data class Total(val userId: Int,
-                     val amount: Long,
-                     val currency: String,
-                     val category: Category)
+    @GetMapping("{period}")
+    fun getRecentTotal(@PathVariable period: String, @RequestParam groupId: Long): List<Total> {
+        val from = Date.from(when (period) {
+            "month" -> LocalDateTime.now().withDayOfMonth(1)
+            else -> throw IllegalArgumentException()
+        }
+                .withHour(0)
+                .withMinute(0)
+                .withSecond(0)
+                .atZone(ZoneId.systemDefault()).toInstant())
+        return expenseRepository.findAllByGroupIdAndDateGreaterThanEqual(groupId, from)
+                .map { Total(it.userId, it.amount, it.currency, it.category) }
+    }
 }

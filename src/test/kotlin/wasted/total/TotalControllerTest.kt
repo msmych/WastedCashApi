@@ -20,7 +20,6 @@ import wasted.expense.Expense.Category.FEES
 import wasted.expense.Expense.Category.SHOPPING
 import wasted.expense.ExpenseRepository
 import wasted.token.TokenInterceptor
-import wasted.total.TotalController.Total
 import java.util.*
 
 @ExtendWith(SpringExtension::class)
@@ -44,6 +43,7 @@ internal class TotalControllerTest {
     fun setUp() {
         whenever(tokenInterceptor.preHandle(any(), any(), any())).thenReturn(true)
         whenever(expenseRepository.findAllByGroupId(any())).thenReturn(listOf(e1, e2))
+        whenever(expenseRepository.findAllByGroupIdAndDateGreaterThanEqual(any(), any())).thenReturn(listOf(e3))
     }
 
     @Test
@@ -52,8 +52,18 @@ internal class TotalControllerTest {
                 Total(2, 1000, "USD", SHOPPING),
                 Total(200, 5000, "RUB", FEES))),
                 mvc.perform(get("/total?groupId=3"))
-                .andExpect(status().isOk)
-                .andReturn().response.contentAsString,
+                        .andExpect(status().isOk)
+                        .andReturn().response.contentAsString,
+                LENIENT)
+    }
+
+    @Test
+    fun gettingRecent() {
+        JSONAssert.assertEquals(objectMapper.writeValueAsString(listOf(
+                Total(20, 999, "USD", SHOPPING))),
+                mvc.perform(get("/total/month?groupId=3"))
+                        .andExpect(status().isOk)
+                        .andReturn().response.contentAsString,
                 LENIENT)
     }
 }
