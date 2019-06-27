@@ -2,8 +2,7 @@ package wasted.total
 
 import org.springframework.web.bind.annotation.*
 import wasted.expense.ExpenseRepository
-import java.time.LocalDateTime
-import java.time.ZoneId
+import java.time.ZonedDateTime
 import java.util.*
 
 @RestController
@@ -19,13 +18,13 @@ class TotalController(val expenseRepository: ExpenseRepository) {
     @GetMapping("{period}")
     fun getRecentTotal(@PathVariable period: String, @RequestParam groupId: Long): List<Total> {
         val from = Date.from(when (period) {
-            "month" -> LocalDateTime.now().withDayOfMonth(1)
+            "month" -> ZonedDateTime.now().withDayOfMonth(1)
             else -> throw IllegalArgumentException()
         }
                 .withHour(0)
                 .withMinute(0)
                 .withSecond(0)
-                .atZone(ZoneId.systemDefault()).toInstant())
+                .toInstant())
         return expenseRepository.findAllByGroupIdAndDateGreaterThanEqual(groupId, from)
                 .map { Total(it.userId, it.amount, it.currency, it.category) }
     }
