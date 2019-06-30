@@ -20,8 +20,12 @@ class TotalController(val expenseRepository: ExpenseRepository) {
                 .map { cur ->
                     cur.value.groupBy { it.category }
                             .map { cat -> cat.value
-                                    .map { Total(it.userId, it.amount, cur.key, cat.key) }
-                            }.flatten()
+                                    .map {
+                                        Total(it.userId, it.amount, cur.key, cat.key)
+                                    }.reduce { acc, total ->
+                                        Total(total.userId, acc.amount + total.amount, total.currency, total.category)
+                                    }
+                            }
                 }.flatten()
     }
 
