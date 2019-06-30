@@ -1,6 +1,7 @@
 package wasted.total
 
 import org.springframework.web.bind.annotation.*
+import wasted.expense.Expense
 import wasted.expense.ExpenseRepository
 import java.time.ZonedDateTime
 import java.util.*
@@ -11,8 +12,17 @@ class TotalController(val expenseRepository: ExpenseRepository) {
 
     @GetMapping
     fun getTotal(@RequestParam groupId: Long): List<Total> {
-        return expenseRepository.findAllByGroupId(groupId)
-                .map { Total(it.userId, it.amount, it.currency, it.category) }
+        return toTotalList(expenseRepository.findAllByGroupId(groupId))
+    }
+
+    private fun toTotalList(expenses: List<Expense>): List<Total> {
+        return expenses.groupBy { it.currency }
+                .map { cur ->
+                    cur.value.groupBy { it.category }
+                            .map { cat -> cat.value
+                                    .map { Total(it.userId, it.amount, cur.key, cat.key) }
+                            }.flatten()
+                }.flatten()
     }
 
     @GetMapping("{period}")
@@ -25,7 +35,6 @@ class TotalController(val expenseRepository: ExpenseRepository) {
                 .withMinute(0)
                 .withSecond(0)
                 .toInstant())
-        return expenseRepository.findAllByGroupIdAndDateGreaterThanEqual(groupId, from)
-                .map { Total(it.userId, it.amount, it.currency, it.category) }
+        return toTotalList(expenseRepository.findAllByGroupIdAndDateGreaterThanEqual(groupId, from))
     }
 }
