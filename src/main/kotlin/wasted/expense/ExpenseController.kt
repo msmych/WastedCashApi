@@ -28,8 +28,8 @@ class ExpenseController(val expenseRepository: ExpenseRepository,
                 ?: throw NoSuchExpenseException()
     }
 
-    @GetMapping("{groupId}/telegramMessageIds")
-    fun findTelegramMessageIdsByGroupId(@PathVariable groupId: Long): List<Int> {
+    @GetMapping("telegramMessageIds")
+    fun findTelegramMessageIdsByGroupId(@RequestParam groupId: Long): List<Int> {
         return expenseRepository.findAllByGroupIdAndTelegramMessageIdNotNull(groupId)
                 .map { it.telegramMessageId ?: throw IllegalArgumentException() }
     }
