@@ -45,6 +45,10 @@ compileTestKotlin {
     }
 }
 
+bootJar {
+    mainClassName = 'wasted.WastedCashApiApplicationKt'
+}
+
 test {
     useJUnitPlatform()
 }
