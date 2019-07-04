@@ -23,7 +23,7 @@ class LoadExpensesController(val objectMapper: ObjectMapper,
         log.info("Loading {} expenses", expenses.size)
         expenses
                 .forEach { expenseRepository.save(
-                        Expense(mongoSequenceService.next("expense"),
+                        Expense(mongoSequenceService.next(Expense.SEQUENCE),
                                 it.userId,
                                 it.groupId,
                                 null,
