@@ -37,8 +37,11 @@ class ExpenseController(val expenseRepository: ExpenseRepository,
     @PostMapping
     fun createExpense(@RequestBody request: PostExpenseRequest): Expense {
         log.info("Creating expense {}", request)
-        val user = userRepository.findById(request.userId)
-                .orElse(userRepository.save(User(request.userId, arrayListOf("USD", "EUR", "RUB"))))
+        val mayBeUser = userRepository.findById(request.userId)
+        val user = with(mayBeUser) {
+            if (isPresent) get()
+            else userRepository.save(User(request.userId, arrayListOf("USD", "EUR", "RUB")))
+        }
         return expenseRepository.save(Expense(
                 mongoSequenceService.next(Expense.SEQUENCE),
                 request.userId,
