@@ -51,7 +51,7 @@ internal class ExpenseControllerTest {
     }
 
     @Test fun creatingExpense() {
-        whenever(expenseRepository.save(any<Expense>())).then{ it.arguments[0] }
+        whenever(expenseRepository.save(any())).then{ it.arguments[0] }
         JSONAssert.assertEquals(objectMapper.writeValueAsString(
                 Expense(0, 1, 2, 3, 0, "USD", OTHER)),
                 mvc.perform(post("/expense")
@@ -61,6 +61,6 @@ internal class ExpenseControllerTest {
                     .andReturn().response.contentAsString,
                 CustomComparator(LENIENT, Customization("date") { _, _ -> true }))
         verify(mongoSequenceService).next(any())
-        verify(expenseRepository).save(any<Expense>())
+        verify(expenseRepository).save(any())
     }
 }

@@ -31,12 +31,6 @@ class ExpenseController(val expenseRepository: ExpenseRepository,
                 ?: throw NoSuchExpenseException()
     }
 
-    @GetMapping("telegramMessageIds")
-    fun findTelegramMessageIdsByGroupId(@RequestParam groupId: Long): List<Int> {
-        return expenseRepository.findAllByGroupIdAndTelegramMessageIdNotNull(groupId)
-                .map { it.telegramMessageId ?: throw IllegalArgumentException() }
-    }
-
     @PostMapping
     fun createExpense(@RequestBody request: PostExpenseRequest): Expense {
         log.info("Creating expense {}", request)
