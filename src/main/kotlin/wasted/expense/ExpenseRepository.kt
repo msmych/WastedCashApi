@@ -12,4 +12,5 @@ interface ExpenseRepository : MongoRepository<Expense, Long> {
 
     fun deleteByGroupIdAndTelegramMessageId(groupId: Long, telegramMessageId: Int)
     fun deleteAllByGroupId(groupId: Long)
+    fun deleteAllByGroupIdAndDateLessThan(groupId: Long, until: Date)
 }

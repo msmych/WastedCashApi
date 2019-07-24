@@ -4,9 +4,12 @@ import org.slf4j.LoggerFactory
 import org.springframework.web.bind.annotation.*
 import wasted.expense.Expense.Category.OTHER
 import wasted.expense.ExpenseController.ExpenseRemovalType.ALL
+import wasted.expense.ExpenseController.ExpenseRemovalType.UP_TO_THIS_MONTH
 import wasted.mongo.MongoSequenceService
 import wasted.user.User
 import wasted.user.UserRepository
+import java.time.ZonedDateTime.now
+import java.util.*
 
 @RestController
 @RequestMapping("expense")
@@ -90,10 +93,19 @@ class ExpenseController(val expenseRepository: ExpenseRepository,
     fun removeByType(@PathVariable groupId: Long, @PathVariable type: ExpenseRemovalType) {
         when (type) {
             ALL -> expenseRepository.deleteAllByGroupId(groupId)
+            UP_TO_THIS_MONTH -> expenseRepository.deleteAllByGroupIdAndDateLessThan(
+                    groupId,
+                    Date.from(now()
+                            .withDayOfMonth(1)
+                            .withHour(0)
+                            .withMinute(0)
+                            .withSecond(0)
+                            .toInstant()))
         }
     }
 
     enum class ExpenseRemovalType {
-        ALL
+        ALL,
+        UP_TO_THIS_MONTH
     }
 }
