@@ -49,8 +49,8 @@ internal class TotalControllerTest {
     @Test
     fun gettingByGroupId() {
         JSONAssert.assertEquals(objectMapper.writeValueAsString(listOf(
-                Total(2, 1000, "USD", SHOPPING),
-                Total(200, 5000, "RUB", FEES))),
+                Total(3, 2, 1000, "USD", SHOPPING),
+                Total(3, 200, 5000, "RUB", FEES))),
                 mvc.perform(get("/total/in/3/type/ALL"))
                         .andExpect(status().isOk)
                         .andReturn().response.contentAsString,
@@ -60,7 +60,7 @@ internal class TotalControllerTest {
     @Test
     fun gettingRecent() {
         JSONAssert.assertEquals(objectMapper.writeValueAsString(listOf(
-                Total(20, 999, "USD", SHOPPING))),
+                Total(30, 20, 999, "USD", SHOPPING))),
                 mvc.perform(get("/total/in/3/type/MONTH"))
                         .andExpect(status().isOk)
                         .andReturn().response.contentAsString,
