@@ -34,7 +34,7 @@ internal class UserControllerTest {
     fun setUp() {
         whenever(tokenInterceptor.preHandle(any(), any(), any())).thenReturn(true)
         whenever(userRepository.findById(1))
-                .thenReturn(Optional.of(User(1, arrayListOf("USD", "EUR"))))
+                .thenReturn(Optional.of(User(1, arrayListOf("USD", "EUR"), 1234)))
     }
 
     @Test

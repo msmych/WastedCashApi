@@ -47,7 +47,7 @@ internal class ExpenseControllerTest {
     @BeforeEach
     fun setUp() {
         whenever(tokenInterceptor.preHandle(any(), any(), any())).thenReturn(true)
-        whenever(userRepository.findById(any())).thenReturn(Optional.of(User(1, arrayListOf("USD"))))
+        whenever(userRepository.findById(any())).thenReturn(Optional.of(User(1, arrayListOf("USD"), 1234)))
     }
 
     @Test fun creatingExpense() {
