@@ -1,7 +1,6 @@
 package wasted.user
 
 import org.springframework.web.bind.annotation.*
-import java.util.concurrent.ThreadLocalRandom
 
 @RestController
 @RequestMapping("user")
@@ -16,7 +15,7 @@ class UserController(val userRepository: UserRepository) {
   fun createUser(@PathVariable id: Int) {
     if (userRepository.findById(id).isPresent)
       throw IllegalArgumentException("User $id already exists")
-    userRepository.save(User(id, arrayListOf("USD", "EUR", "RUB"), ThreadLocalRandom.current().nextLong()))
+    userRepository.save(User(id, arrayListOf("USD", "EUR", "RUB"), false))
   }
 
   @GetMapping("{id}/currencies")

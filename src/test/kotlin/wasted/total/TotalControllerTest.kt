@@ -26,44 +26,44 @@ import java.util.*
 @WebMvcTest(TotalController::class)
 internal class TotalControllerTest {
 
-    private val e1 = Expense(1, 2, 3, 4, 1000, "USD", SHOPPING, Date())
-    private val e2 = Expense(100, 200, 3, 400, 5000, "RUB", FEES, Date())
-    private val e3 = Expense(10, 20, 30, 40, 999, "USD", SHOPPING, Date())
+  private val e1 = Expense(1, 2, 3, 4, 1000, "USD", SHOPPING, Date())
+  private val e2 = Expense(100, 200, 3, 400, 5000, "RUB", FEES, Date())
+  private val e3 = Expense(10, 20, 30, 40, 999, "USD", SHOPPING, Date())
 
-    @Autowired
-    lateinit var mvc: MockMvc
-    @Autowired
-    lateinit var objectMapper: ObjectMapper
-    @MockBean
-    lateinit var expenseRepository: ExpenseRepository
-    @MockBean
-    lateinit var tokenInterceptor: TokenInterceptor
+  @Autowired
+  lateinit var mvc: MockMvc
+  @Autowired
+  lateinit var objectMapper: ObjectMapper
+  @MockBean
+  lateinit var expenseRepository: ExpenseRepository
+  @MockBean
+  lateinit var tokenInterceptor: TokenInterceptor
 
-    @BeforeEach
-    fun setUp() {
-        whenever(tokenInterceptor.preHandle(any(), any(), any())).thenReturn(true)
-        whenever(expenseRepository.findAllByGroupId(any())).thenReturn(listOf(e1, e2))
-        whenever(expenseRepository.findAllByGroupIdAndDateGreaterThanEqual(any(), any())).thenReturn(listOf(e3))
-    }
+  @BeforeEach
+  fun setUp() {
+    whenever(tokenInterceptor.preHandle(any(), any(), any())).thenReturn(true)
+    whenever(expenseRepository.findAllByGroupId(any())).thenReturn(listOf(e1, e2))
+    whenever(expenseRepository.findAllByGroupIdAndDateGreaterThanEqual(any(), any())).thenReturn(listOf(e3))
+  }
 
-    @Test
-    fun gettingByGroupId() {
-        JSONAssert.assertEquals(objectMapper.writeValueAsString(listOf(
-                Total(3, 2, 1000, "USD", SHOPPING),
-                Total(3, 200, 5000, "RUB", FEES))),
-                mvc.perform(get("/total/in/3/type/ALL"))
-                        .andExpect(status().isOk)
-                        .andReturn().response.contentAsString,
-                LENIENT)
-    }
+  @Test
+  fun gettingByGroupId() {
+    JSONAssert.assertEquals(objectMapper.writeValueAsString(listOf(
+      Total(3, 2, 1000, "USD", SHOPPING),
+      Total(3, 200, 5000, "RUB", FEES))),
+      mvc.perform(get("/total/in/3/type/ALL"))
+        .andExpect(status().isOk)
+        .andReturn().response.contentAsString,
+      LENIENT)
+  }
 
-    @Test
-    fun gettingRecent() {
-        JSONAssert.assertEquals(objectMapper.writeValueAsString(listOf(
-                Total(30, 20, 999, "USD", SHOPPING))),
-                mvc.perform(get("/total/in/3/type/MONTH"))
-                        .andExpect(status().isOk)
-                        .andReturn().response.contentAsString,
-                LENIENT)
-    }
+  @Test
+  fun gettingRecent() {
+    JSONAssert.assertEquals(objectMapper.writeValueAsString(listOf(
+      Total(30, 20, 999, "USD", SHOPPING))),
+      mvc.perform(get("/total/in/3/type/MONTH"))
+        .andExpect(status().isOk)
+        .andReturn().response.contentAsString,
+      LENIENT)
+  }
 }

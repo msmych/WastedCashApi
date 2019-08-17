@@ -6,4 +6,4 @@ import org.springframework.data.mongodb.core.mapping.Document
 @Document
 data class User(@Id val id: Int,
                 val currencies: ArrayList<String>,
-                val token: Long)
+                val whatsNew: Boolean)

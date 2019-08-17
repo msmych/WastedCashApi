@@ -23,45 +23,45 @@ import java.util.*
 @WebMvcTest(UserController::class)
 internal class UserControllerTest {
 
-    @Autowired
-    lateinit var mvc: MockMvc
-    @MockBean
-    lateinit var userRepository: UserRepository
-    @MockBean
-    lateinit var tokenInterceptor: TokenInterceptor
+  @Autowired
+  lateinit var mvc: MockMvc
+  @MockBean
+  lateinit var userRepository: UserRepository
+  @MockBean
+  lateinit var tokenInterceptor: TokenInterceptor
 
-    @BeforeEach
-    fun setUp() {
-        whenever(tokenInterceptor.preHandle(any(), any(), any())).thenReturn(true)
-        whenever(userRepository.findById(1))
-                .thenReturn(Optional.of(User(1, arrayListOf("USD", "EUR"), 1234)))
-    }
+  @BeforeEach
+  fun setUp() {
+    whenever(tokenInterceptor.preHandle(any(), any(), any())).thenReturn(true)
+    whenever(userRepository.findById(1))
+      .thenReturn(Optional.of(User(1, arrayListOf("USD", "EUR"), false)))
+  }
 
-    @Test
-    fun savingUser() {
-        whenever(userRepository.findById(any())).thenReturn(Optional.empty())
-        mvc.perform(post("/user/1"))
-                .andExpect(status().isOk)
-        verify(userRepository).save(any<User>())
-    }
+  @Test
+  fun savingUser() {
+    whenever(userRepository.findById(any())).thenReturn(Optional.empty())
+    mvc.perform(post("/user/1"))
+      .andExpect(status().isOk)
+    verify(userRepository).save(any<User>())
+  }
 
-    @Test
-    fun gettingUserCurrencies() {
-        JSONAssert.assertEquals("[USD, EUR]",
-                mvc.perform(get("/user/1/currencies"))
-                .andExpect(status().isOk)
-                .andReturn()
-                .response.contentAsString,
-                LENIENT)
-    }
+  @Test
+  fun gettingUserCurrencies() {
+    JSONAssert.assertEquals("[USD, EUR]",
+      mvc.perform(get("/user/1/currencies"))
+        .andExpect(status().isOk)
+        .andReturn()
+        .response.contentAsString,
+      LENIENT)
+  }
 
-    @Test
-    fun addingUserCurrency() {
-        JSONAssert.assertEquals("[USD, EUR, RUB]",
-                mvc.perform(patch("/user/1/currency/rub")
-                        .contentType(APPLICATION_JSON))
-                        .andExpect(status().isOk)
-                        .andReturn().response.contentAsString,
-                LENIENT)
-    }
+  @Test
+  fun addingUserCurrency() {
+    JSONAssert.assertEquals("[USD, EUR, RUB]",
+      mvc.perform(patch("/user/1/currency/rub")
+        .contentType(APPLICATION_JSON))
+        .andExpect(status().isOk)
+        .andReturn().response.contentAsString,
+      LENIENT)
+  }
 }

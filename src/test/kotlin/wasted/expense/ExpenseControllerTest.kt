@@ -31,36 +31,37 @@ import java.util.*
 @WebMvcTest(ExpenseController::class)
 internal class ExpenseControllerTest {
 
-    @Autowired
-    lateinit var mvc: MockMvc
-    @Autowired
-    lateinit var objectMapper: ObjectMapper
-    @MockBean
-    lateinit var expenseRepository: ExpenseRepository
-    @MockBean
-    lateinit var mongoSequenceService: MongoSequenceService
-    @MockBean
-    lateinit var userRepository: UserRepository
-    @MockBean
-    lateinit var tokenInterceptor: TokenInterceptor
+  @Autowired
+  lateinit var mvc: MockMvc
+  @Autowired
+  lateinit var objectMapper: ObjectMapper
+  @MockBean
+  lateinit var expenseRepository: ExpenseRepository
+  @MockBean
+  lateinit var mongoSequenceService: MongoSequenceService
+  @MockBean
+  lateinit var userRepository: UserRepository
+  @MockBean
+  lateinit var tokenInterceptor: TokenInterceptor
 
-    @BeforeEach
-    fun setUp() {
-        whenever(tokenInterceptor.preHandle(any(), any(), any())).thenReturn(true)
-        whenever(userRepository.findById(any())).thenReturn(Optional.of(User(1, arrayListOf("USD"), 1234)))
-    }
+  @BeforeEach
+  fun setUp() {
+    whenever(tokenInterceptor.preHandle(any(), any(), any())).thenReturn(true)
+    whenever(userRepository.findById(any())).thenReturn(Optional.of(User(1, arrayListOf("USD"), false)))
+  }
 
-    @Test fun creatingExpense() {
-        whenever(expenseRepository.save(any<Expense>())).then{ it.arguments[0] }
-        JSONAssert.assertEquals(objectMapper.writeValueAsString(
-                Expense(0, 1, 2, 3, 0, "USD", OTHER)),
-                mvc.perform(post("/expense")
-                    .contentType(APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(PostExpenseRequest(1, 2, 3))))
-                    .andExpect(status().isOk)
-                    .andReturn().response.contentAsString,
-                CustomComparator(LENIENT, Customization("date") { _, _ -> true }))
-        verify(mongoSequenceService).next(any())
-        verify(expenseRepository).save(any<Expense>())
-    }
+  @Test
+  fun creatingExpense() {
+    whenever(expenseRepository.save(any<Expense>())).then { it.arguments[0] }
+    JSONAssert.assertEquals(objectMapper.writeValueAsString(
+      Expense(0, 1, 2, 3, 0, "USD", OTHER)),
+      mvc.perform(post("/expense")
+        .contentType(APPLICATION_JSON)
+        .content(objectMapper.writeValueAsString(PostExpenseRequest(1, 2, 3))))
+        .andExpect(status().isOk)
+        .andReturn().response.contentAsString,
+      CustomComparator(LENIENT, Customization("date") { _, _ -> true }))
+    verify(mongoSequenceService).next(any())
+    verify(expenseRepository).save(any<Expense>())
+  }
 }

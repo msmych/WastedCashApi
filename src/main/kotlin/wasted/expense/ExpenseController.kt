@@ -10,7 +10,6 @@ import wasted.user.User
 import wasted.user.UserRepository
 import java.time.ZonedDateTime.now
 import java.util.*
-import java.util.concurrent.ThreadLocalRandom
 
 @RestController
 @RequestMapping("expense")
@@ -27,7 +26,7 @@ class ExpenseController(val expenseRepository: ExpenseRepository,
 
   @GetMapping
   fun expenseByGroupIdAndTelegramMessageId(@RequestParam groupId: Long,
-                                              @RequestParam telegramMessageId: Int): Expense {
+                                           @RequestParam telegramMessageId: Int): Expense {
     return expenseRepository.findByGroupIdAndTelegramMessageId(groupId, telegramMessageId)
       ?: throw NoSuchExpenseException()
   }
@@ -37,10 +36,7 @@ class ExpenseController(val expenseRepository: ExpenseRepository,
     log.info("Creating expense {}", request)
     val user = userRepository.findById(request.userId)
       .orElseGet {
-        userRepository.save(User(
-          request.userId,
-          arrayListOf("USD", "EUR", "RUB"),
-          ThreadLocalRandom.current().nextLong()))
+        userRepository.save(User(request.userId, arrayListOf("USD", "EUR", "RUB"), false))
       }
     return expenseRepository.save(Expense(
       mongoSequenceService.next(Expense.SEQUENCE),
