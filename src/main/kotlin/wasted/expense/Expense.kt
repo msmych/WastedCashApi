@@ -3,7 +3,8 @@ package wasted.expense
 import org.springframework.data.annotation.Id
 import org.springframework.data.annotation.Transient
 import org.springframework.data.mongodb.core.mapping.Document
-import java.util.*
+import java.time.Instant
+import java.time.Instant.now
 
 @Document
 data class Expense(@Id val id: Long,
@@ -13,7 +14,7 @@ data class Expense(@Id val id: Long,
                    val amount: Long,
                    val currency: String,
                    val category: Category,
-                   val date: Date = Date()) {
+                   val date: Instant = now()) {
 
     companion object {
         @Transient

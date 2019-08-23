@@ -20,15 +20,15 @@ import wasted.expense.Expense.Category.FEES
 import wasted.expense.Expense.Category.SHOPPING
 import wasted.expense.ExpenseRepository
 import wasted.token.TokenInterceptor
-import java.util.*
+import java.time.Instant.now
 
 @ExtendWith(SpringExtension::class)
 @WebMvcTest(TotalController::class)
 internal class TotalControllerTest {
 
-  private val e1 = Expense(1, 2, 3, 4, 1000, "USD", SHOPPING, Date())
-  private val e2 = Expense(100, 200, 3, 400, 5000, "RUB", FEES, Date())
-  private val e3 = Expense(10, 20, 30, 40, 999, "USD", SHOPPING, Date())
+  private val e1 = Expense(1, 2, 3, 4, 1000, "USD", SHOPPING, now())
+  private val e2 = Expense(100, 200, 3, 400, 5000, "RUB", FEES, now())
+  private val e3 = Expense(10, 20, 30, 40, 999, "USD", SHOPPING, now())
 
   @Autowired
   lateinit var mvc: MockMvc
