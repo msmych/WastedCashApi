@@ -1,14 +1,20 @@
 package wasted.mongo
 
 import org.bson.Document
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation
 import org.springframework.data.mongodb.core.aggregation.AggregationOperation
 import org.springframework.stereotype.Component
+import wasted.mongo.MongoMigrator.MigrationStrategy.ALL
+import wasted.mongo.MongoMigrator.MigrationStrategy.CURRENT_VERSION
 import javax.annotation.PostConstruct
 
 @Component
 class MongoMigrator(private val mongoTemplate: MongoTemplate) {
+
+  @Value("\${migration-strategy}")
+  lateinit var migrationStrategy: MigrationStrategy
 
   private val userAddWhatsNew: Runnable = Runnable {
     mongoTemplate.aggregate(newAggregation(AggregationOperation {
@@ -32,6 +38,14 @@ class MongoMigrator(private val mongoTemplate: MongoTemplate) {
 
   @PostConstruct
   fun init() {
-    migrations[manifestValue("App-Version")]?.run()
+    when (migrationStrategy) {
+      CURRENT_VERSION -> migrations[manifestValue("App-Version")]?.run()
+      ALL -> migrations.values.forEach { it.run() }
+      else -> {}
+    }
+  }
+
+  enum class MigrationStrategy {
+    NONE, CURRENT_VERSION, ALL
   }
 }
