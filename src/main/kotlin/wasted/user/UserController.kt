@@ -44,4 +44,12 @@ class UserController(val userRepository: UserRepository) {
     userRepository.save(user)
     return user.currencies
   }
+
+  @PatchMapping("{id}/whats-new")
+  fun toggleWhatsNew(@PathVariable id: Int): Boolean {
+    val user = userRepository.findById(id)
+      .orElseThrow { NoSuchUserException(id) }
+    userRepository.save(User(user.id, user.currencies, !user.whatsNew))
+    return !user.whatsNew
+  }
 }
