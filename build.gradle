@@ -17,8 +17,6 @@ repositories {
 dependencies {
   implementation 'org.springframework.boot:spring-boot-starter-web',
     'org.springframework.boot:spring-boot-starter-data-mongodb',
-    'io.springfox:springfox-swagger2:2.9.2',
-    'io.springfox:springfox-swagger-ui:2.9.2',
     'com.fasterxml.jackson.module:jackson-module-kotlin',
     'org.jetbrains.kotlin:kotlin-reflect',
     'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
