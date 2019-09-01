@@ -8,6 +8,8 @@ files/
 
 logs/
 
+src/main/resources/static
+
 src/main/resources/application-prod.yml
 
 ### STS ###
