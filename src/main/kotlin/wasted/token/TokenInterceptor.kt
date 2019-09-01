@@ -16,9 +16,8 @@ class TokenInterceptor : HandlerInterceptor {
 
   override fun preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: Any): Boolean {
     if (setOf("/user", "/expense", "/total").none { request.requestURI.startsWith(it) }) return true
-    val apiTokenHeader = request.getHeader("api-token")
-    if (apiTokenHeader == apiToken) return true
     val userIdHeader = request.getHeader("user-id")
+    val apiTokenHeader = request.getHeader("api-token")
     if (sha256Hex("$userIdHeader$apiTokenHeader") == sha256Hex("$userIdHeader$apiToken")) return true
     response.sendError(SC_FORBIDDEN, "api-token is not valid")
     return false
