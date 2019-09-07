@@ -45,13 +45,14 @@ class ExpenseController(val expenseRepository: ExpenseRepository,
       request.telegramMessageId,
       request.amount,
       user.currencies[0],
-      OTHER))
+      request.category))
   }
 
   data class PostExpenseRequest(val userId: Int,
                                 val groupId: Long,
                                 val telegramMessageId: Int?,
-                                val amount: Long = 0)
+                                val amount: Long = 0,
+                                val category: Expense.Category = OTHER)
 
   @PutMapping
   fun updateExpense(@RequestBody request: PutExpenseRequest) {
