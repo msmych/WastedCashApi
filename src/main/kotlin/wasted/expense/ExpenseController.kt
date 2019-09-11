@@ -44,7 +44,7 @@ class ExpenseController(val expenseRepository: ExpenseRepository,
       request.groupId,
       request.telegramMessageId,
       request.amount,
-      user.currencies[0],
+      request.currency ?: user.currencies[0],
       request.category))
   }
 
@@ -52,6 +52,7 @@ class ExpenseController(val expenseRepository: ExpenseRepository,
                                 val groupId: Long,
                                 val telegramMessageId: Int?,
                                 val amount: Long = 0,
+                                val currency: String?,
                                 val category: Expense.Category = OTHER)
 
   @PutMapping
