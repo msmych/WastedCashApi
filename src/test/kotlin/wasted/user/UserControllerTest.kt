@@ -38,7 +38,7 @@ internal class UserControllerTest {
   }
 
   @Test
-  fun savingUser() {
+  fun should_save_user() {
     whenever(userRepository.findById(any())).thenReturn(Optional.empty())
     mvc.perform(post("/user/1"))
       .andExpect(status().isOk)
@@ -46,7 +46,7 @@ internal class UserControllerTest {
   }
 
   @Test
-  fun gettingUserCurrencies() {
+  fun should_get_user_currencies() {
     JSONAssert.assertEquals("[USD, EUR]",
       mvc.perform(get("/user/1/currencies"))
         .andExpect(status().isOk)
@@ -56,7 +56,7 @@ internal class UserControllerTest {
   }
 
   @Test
-  fun addingUserCurrency() {
+  fun should_add_user_currency() {
     JSONAssert.assertEquals("[USD, EUR, RUB]",
       mvc.perform(patch("/user/1/currency/rub")
         .contentType(APPLICATION_JSON))
