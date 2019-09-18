@@ -110,4 +110,28 @@ internal class ExpenseControllerTest {
       .andExpect(status().isOk)
     verify(expenseRepository).save(any<Expense>())
   }
+
+  @Test
+  fun should_remove_expense_by_id() {
+    mvc.perform(delete("/expense/${expense.id}"))
+    verify(expenseRepository).deleteById(expense.id)
+  }
+
+  @Test
+  fun should_remove_expense_by_group_id_and_telegram_message_id() {
+    mvc.perform(delete("/expense?groupId=${expense.groupId}&telegramMessageId=${expense.telegramMessageId}"))
+    verify(expenseRepository).deleteByGroupIdAndTelegramMessageId(expense.groupId, 3)
+  }
+
+  @Test
+  fun should_remove_all_expenses() {
+    mvc.perform(delete("/expense/in/${expense.groupId}/type/ALL"))
+    verify(expenseRepository).deleteAllByGroupId(expense.groupId)
+  }
+
+  @Test
+  fun should_remove_expenses_up_to_this_month() {
+    mvc.perform(delete("/expense/in/${expense.groupId}/type/UP_TO_THIS_MONTH"))
+    verify(expenseRepository).deleteAllByGroupIdAndDateLessThan(any(), any())
+  }
 }
