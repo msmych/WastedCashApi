@@ -9,8 +9,8 @@ import wasted.expense.ExpenseRepository
 import wasted.total.Total.Type
 import wasted.total.Total.Type.ALL
 import wasted.total.Total.Type.MONTH
+import java.time.Instant
 import java.time.ZonedDateTime.now
-import java.util.*
 
 @RestController
 @RequestMapping("total")
@@ -42,15 +42,15 @@ class TotalController(val expenseRepository: ExpenseRepository) {
       }.flatten()
   }
 
-  private fun date(type: Type): Date {
-    return Date.from(when (type) {
+  private fun date(type: Type): Instant {
+    return when (type) {
       MONTH -> now().withDayOfMonth(1)
       else -> throw IllegalArgumentException()
     }
       .withHour(0)
       .withMinute(0)
       .withSecond(0)
-      .toInstant())
+      .toInstant()
   }
 
   @GetMapping("type/{type}")

@@ -9,7 +9,6 @@ import wasted.mongo.MongoSequenceService
 import wasted.user.User
 import wasted.user.UserRepository
 import java.time.ZonedDateTime.now
-import java.util.*
 
 @RestController
 @RequestMapping("expense")
@@ -93,12 +92,12 @@ class ExpenseController(val expenseRepository: ExpenseRepository,
       ALL -> expenseRepository.deleteAllByGroupId(groupId)
       UP_TO_THIS_MONTH -> expenseRepository.deleteAllByGroupIdAndDateLessThan(
         groupId,
-        Date.from(now()
+        now()
           .withDayOfMonth(1)
           .withHour(0)
           .withMinute(0)
           .withSecond(0)
-          .toInstant()))
+          .toInstant())
     }
   }
 
