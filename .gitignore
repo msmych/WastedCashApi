@@ -11,6 +11,7 @@ logs/
 src/main/resources/static
 
 src/main/resources/application-prod.yml
+**.p12
 
 ### STS ###
 .apt_generated
