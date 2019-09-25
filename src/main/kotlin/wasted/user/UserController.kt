@@ -25,11 +25,6 @@ class UserController(val userRepository: UserRepository) {
       .orElseThrow { NoSuchUserException(id) }
   }
 
-  @GetMapping("{id}/whats-new")
-  fun userWhatsNew(@PathVariable id: Int): Boolean {
-    return userRepository.findById(id).map { it.whatsNew }.orElse(false)
-  }
-
   @PatchMapping("{id}/currency/{currency}")
   fun toggleCurrency(@PathVariable id: Int, @PathVariable currency: String): List<String> {
     val user = userRepository.findById(id)
@@ -43,6 +38,11 @@ class UserController(val userRepository: UserRepository) {
       user.currencies.add(currencyUpperCase)
     userRepository.save(user)
     return user.currencies
+  }
+
+  @GetMapping("{id}/whats-new")
+  fun userWhatsNew(@PathVariable id: Int): Boolean {
+    return userRepository.findById(id).map { it.whatsNew }.orElse(false)
   }
 
   @PatchMapping("{id}/whats-new")
