@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("groups")
-class GroupsController(val groupRepository: GroupRepository) {
+class GroupsController(val userGroupRepository: UserGroupRepository) {
 
   @GetMapping("monthly-report/ids")
   fun monthlyReportGroupsIds(): List<Long> =
-    groupRepository.findAllByMonthlyReportTrue().map { it.id }
+    userGroupRepository.findAllByMonthlyReportTrue().map { it.id }
 }

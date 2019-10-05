@@ -14,6 +14,17 @@ private val userAddWhatsNew = Consumer<MongoTemplate> { mongo ->
     .forEach { mongo.save(it, "user") }
 }
 
+private val createUserGroups = Consumer<MongoTemplate> { mongo ->
+  mongo.aggregate(Aggregation.newAggregation(AggregationOperation {
+    Document("\$project", Document(mapOf("groupId" to true, "_id" to false)))
+  }), "expense", Document::class.java)
+    .mappedResults
+    .map { it["groupId"] }
+    .distinct()
+    .forEach { mongo.save(Document(mapOf("_id" to it, "monthlyReport" to false)), "userGroup") }
+}
+
 val migrations: Map<String, Consumer<MongoTemplate>> = mapOf(
-  "0.1.0" to userAddWhatsNew
+  "0.1.0" to userAddWhatsNew,
+  "0.3.0" to createUserGroups
 )

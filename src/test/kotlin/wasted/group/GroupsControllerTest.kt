@@ -23,16 +23,16 @@ internal class GroupsControllerTest {
   @Autowired
   lateinit var mvc: MockMvc
   @MockBean
-  lateinit var groupRepository: GroupRepository
+  lateinit var userGroupRepository: UserGroupRepository
   @MockBean
   lateinit var tokenInterceptor: TokenInterceptor
 
-  private fun group(id: Long, monthlyReport: Boolean = false): Group = Group(id, arrayListOf(), monthlyReport)
+  private fun group(id: Long, monthlyReport: Boolean = false): UserGroup = UserGroup(id, monthlyReport)
 
   @BeforeEach
   fun setUp() {
     whenever(tokenInterceptor.preHandle(any(), any(), any())).thenReturn(true)
-    whenever(groupRepository.findAllByMonthlyReportTrue())
+    whenever(userGroupRepository.findAllByMonthlyReportTrue())
       .thenReturn(listOf(group(1, true), group(2, true), group(3, true)))
   }
 

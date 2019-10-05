@@ -1,5 +1,6 @@
 package wasted.mongo
 
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.stereotype.Component
@@ -9,6 +10,8 @@ import javax.annotation.PostConstruct
 
 @Component
 class MongoMigrator(private val mongoTemplate: MongoTemplate) {
+
+  private val log = LoggerFactory.getLogger(MongoMigrator::class.java)
 
   @Value("\${migration-strategy}")
   lateinit var migrationStrategy: MigrationStrategy
@@ -23,10 +26,13 @@ class MongoMigrator(private val mongoTemplate: MongoTemplate) {
 
   @PostConstruct
   fun init() {
+    val version = manifestValue("App-Version")
+    log.info("Migration strategy: {}, version {}", migrationStrategy, version)
     when (migrationStrategy) {
-      CURRENT_VERSION -> migrations[manifestValue("App-Version")]?.accept(mongoTemplate)
+      CURRENT_VERSION -> migrations[version]?.accept(mongoTemplate)
       ALL -> migrations.values.forEach { it.accept(mongoTemplate) }
-      else -> {}
+      else -> {
+      }
     }
   }
 
